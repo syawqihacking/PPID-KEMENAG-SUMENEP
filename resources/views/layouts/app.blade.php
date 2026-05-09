@@ -30,10 +30,11 @@
             </div>
             
             <div class="hidden md:flex space-x-8 items-center text-sm font-medium">
-                <a href="{{ route('home') }}" class="text-brand-green border-b-2 border-brand-green pb-1">Home</a>
-                <a href="{{ route('home') }}#news" class="text-gray-600 hover:text-brand-green transition">News</a>
-                <a href="{{ route('ppid.info') }}" class="text-gray-600 hover:text-brand-green transition">PPID Info</a>
-                <a href="{{ route('login') }}" class="text-gray-600 hover:text-brand-green transition">Admin Login</a>
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('home') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">Home</a>
+                <a href="{{ route('profil.index') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('profil.index') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">Profil PPID</a>
+                <a href="{{ route('prosedur.index') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('prosedur.index') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">Standar Layanan</a>
+                <a href="{{ route('news.index') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('news.index') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">News</a>
+                <a href="{{ route('documents.index') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('documents.index') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">PPID Info</a>
             </div>
 
             <div class="hidden md:flex">
@@ -42,9 +43,21 @@
 
             <!-- Mobile menu button -->
             <div class="md:hidden flex items-center">
-                <button class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                <button id="mobile-menu-btn" class="text-gray-600 hover:text-gray-900 focus:outline-none">
                     <i data-lucide="menu"></i>
                 </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                <a href="{{ route('home') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">Home</a>
+                <a href="{{ route('profil.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">Profil PPID</a>
+                <a href="{{ route('prosedur.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">Standar Layanan</a>
+                <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">News</a>
+                <a href="{{ route('documents.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">PPID Info</a>
+                <a href="{{ route('login') }}" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-dark text-white hover:bg-green-900">Login Admin</a>
             </div>
         </div>
     </nav>
@@ -113,6 +126,16 @@
             once: true,
             easing: 'ease-out-cubic'
         });
+
+        // Mobile Menu Toggle
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if(mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
     </script>
 </body>
 </html>
