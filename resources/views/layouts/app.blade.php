@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPID Kemenag Sumenep</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-100 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <!-- Placeholder for logo, replace with actual SVG or image -->
+                <div class="w-8 h-8 flex items-center justify-center">
+                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-brand-green">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                   </svg>
+                </div>
+                <span class="font-bold text-lg text-brand-green tracking-tight">PPID KEMENAG SUMENEP</span>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 items-center text-sm font-medium">
+                <a href="{{ route('home') }}" class="text-brand-green border-b-2 border-brand-green pb-1">Home</a>
+                <a href="{{ route('home') }}#news" class="text-gray-600 hover:text-brand-green transition">News</a>
+                <a href="{{ route('ppid.info') }}" class="text-gray-600 hover:text-brand-green transition">PPID Info</a>
+                <a href="{{ route('login') }}" class="text-gray-600 hover:text-brand-green transition">Admin Login</a>
+            </div>
+
+            <div class="hidden md:flex">
+                <a href="{{ route('login') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">Login</a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button class="text-gray-600 hover:text-gray-900 focus:outline-none">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        @yield('content')
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-12 mt-12 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-brand-green">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                       </svg>
+                        <span class="font-bold text-brand-green">PPID KEMENAG SUMENEP</span>
+                    </div>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-4">
+                        Portal Resmi Layanan Informasi dan Dokumentasi Kementerian Agama Kabupaten Sumenep.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Tautan Terkait</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand-green transition underline">Ministry of Religious Affairs</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition underline">Sumenep Regency</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Bantuan</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand-green transition underline">Contact Support</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition underline">Panduan Pengguna</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Legal</h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand-green transition underline">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-brand-green transition underline">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-200">
+                <p class="text-xs text-gray-500">
+                    &copy; {{ date('Y') }} PPID Kemenag Sumenep. All rights reserved. Official Portal for Public Information.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        lucide.createIcons();
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-out-cubic'
+        });
+    </script>
+</body>
+</html>
