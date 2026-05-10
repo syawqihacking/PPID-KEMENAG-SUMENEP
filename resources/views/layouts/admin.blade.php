@@ -33,23 +33,35 @@
         </div>
 
         <!-- Nav Links -->
-        <nav class="flex-1 px-4 space-y-1">
-            <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
-                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-            </a>
-            <a href="{{ route('admin.news.index') }}" class="{{ request()->routeIs('admin.news.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
-                <i data-lucide="file-text" class="w-4 h-4"></i> Manage News
-            </a>
-            <a href="{{ route('admin.documents.index') }}" class="{{ request()->routeIs('admin.documents.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
-                <i data-lucide="folder" class="w-4 h-4"></i> Documents
-            </a>
-            <a href="{{ route('admin.requests.index') }}" class="{{ request()->routeIs('admin.requests.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
-                <i data-lucide="mail" class="w-4 h-4"></i> Information Requests
-            </a>
-            <a href="#" class="text-gray-600 hover:bg-gray-200 hover:text-gray-900 flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition mt-4">
-                <i data-lucide="settings" class="w-4 h-4"></i> Settings
-            </a>
-        </nav>
+    <nav class="p-4 space-y-1">
+        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+        </a>
+        <a href="{{ route('admin.news.index') }}" class="{{ request()->routeIs('admin.news.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="newspaper" class="w-4 h-4"></i> Manage News
+        </a>
+        <a href="{{ route('admin.documents.index') }}" class="{{ request()->routeIs('admin.documents.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="file-text" class="w-4 h-4"></i> Manage Documents
+        </a>
+        <a href="{{ route('admin.dip.index') }}" class="{{ request()->routeIs('admin.dip.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="folder-tree" class="w-4 h-4"></i> Manage DIP
+        </a>
+        <div class="pt-4 pb-2">
+            <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Interaksi & Layanan</p>
+        </div>
+        <a href="{{ route('admin.requests.index') }}" class="{{ request()->routeIs('admin.requests.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="mail" class="w-4 h-4"></i> Information Requests
+        </a>
+        <a href="{{ route('admin.faqs.index') }}" class="{{ request()->routeIs('admin.faqs.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="help-circle" class="w-4 h-4"></i> FAQ Management
+        </a>
+        <a href="{{ route('admin.reviews.index') }}" class="{{ request()->routeIs('admin.reviews.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition">
+            <i data-lucide="message-square" class="w-4 h-4"></i> Moderasi Ulasan
+        </a>
+        <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.*') ? 'bg-brand-green text-white' : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900' }} flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition mt-4">
+            <i data-lucide="settings" class="w-4 h-4"></i> Settings
+        </a>
+    </nav>
         
         <div class="p-4 border-t border-gray-200">
              <form action="{{ route('logout') }}" method="POST">

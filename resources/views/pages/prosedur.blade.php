@@ -30,7 +30,7 @@
             </div>
             <h2 class="text-3xl font-bold text-gray-900 mb-6">Maklumat Pelayanan</h2>
             <blockquote class="text-xl text-gray-700 italic font-medium leading-relaxed border-l-4 border-brand-gold pl-6 text-left">
-                "Kami berkomitmen memberikan pelayanan informasi publik yang cepat, tepat, akurat, dan transparan sesuai dengan Undang-Undang Keterbukaan Informasi Publik."
+                "{!! nl2br(e($settings['prosedur_maklumat'] ?? 'Kami berkomitmen memberikan pelayanan informasi publik yang cepat, tepat, akurat, dan transparan sesuai dengan Undang-Undang Keterbukaan Informasi Publik.')) !!}"
             </blockquote>
         </div>
     </div>

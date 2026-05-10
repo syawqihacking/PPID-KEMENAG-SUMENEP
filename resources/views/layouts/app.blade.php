@@ -37,7 +37,11 @@
                 <a href="{{ route('documents.index') }}" class="text-gray-600 hover:text-brand-green transition {{ request()->routeIs('documents.index') ? 'text-brand-green border-b-2 border-brand-green pb-1' : '' }}">PPID Info</a>
             </div>
 
-            <div class="hidden md:flex">
+            <div class="hidden md:flex items-center gap-4">
+                <form action="{{ route('search') }}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Cari..." class="w-32 lg:w-48 bg-gray-50 border border-gray-200 rounded-full pl-8 pr-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-green focus:border-brand-green transition-all" required minlength="2">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-2.5 top-2"></i>
+                </form>
                 <a href="{{ route('login') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">Login</a>
             </div>
 
@@ -88,31 +92,35 @@
                 <div>
                     <h3 class="font-semibold text-gray-900 mb-4 text-sm">Tautan Terkait</h3>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-brand-green transition underline">Ministry of Religious Affairs</a></li>
-                        <li><a href="#" class="hover:text-brand-green transition underline">Sumenep Regency</a></li>
+                        <li><a href="https://kemenag.go.id" target="_blank" class="hover:text-brand-green transition underline">Kementerian Agama RI</a></li>
+                        <li><a href="https://jatim.kemenag.go.id" target="_blank" class="hover:text-brand-green transition underline">Kanwil Kemenag Jatim</a></li>
+                        <li><a href="https://sumenepkab.go.id" target="_blank" class="hover:text-brand-green transition underline">Pemkab Sumenep</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Bantuan</h3>
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Layanan Kami</h3>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-brand-green transition underline">Contact Support</a></li>
-                        <li><a href="#" class="hover:text-brand-green transition underline">Panduan Pengguna</a></li>
+                        <li><a href="{{ route('dip.index') }}" class="hover:text-brand-green transition underline">Daftar Informasi Publik (DIP)</a></li>
+                        <li><a href="{{ route('requests.create') }}" class="hover:text-brand-green transition underline">Permohonan Informasi</a></li>
+                        <li><a href="{{ route('faq.index') }}" class="hover:text-brand-green transition underline">FAQ (Tanya Jawab)</a></li>
+                        <li><a href="{{ route('reviews.index') }}" class="hover:text-brand-green transition underline">Ulasan & Penilaian</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Legal</h3>
+                    <h3 class="font-semibold text-gray-900 mb-4 text-sm">Hubungi Kami</h3>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-brand-green transition underline">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-brand-green transition underline">Terms of Service</a></li>
+                        <li><a href="{{ route('kontak.index') }}" class="hover:text-brand-green transition underline">Kontak & Lokasi</a></li>
+                        <li class="flex gap-2 items-start"><i data-lucide="phone" class="w-4 h-4 mt-0.5 text-gray-400"></i> {{ \App\Models\Setting::get('kontak_telepon', '(0328) 662-124') }}</li>
+                        <li class="flex gap-2 items-start"><i data-lucide="mail" class="w-4 h-4 mt-0.5 text-gray-400"></i> {{ explode(',', \App\Models\Setting::get('kontak_email', 'ppid.sumenep@kemenag.go.id'))[0] }}</li>
                     </ul>
                 </div>
             </div>
             
             <div class="mt-12 pt-8 border-t border-gray-200">
                 <p class="text-xs text-gray-500">
-                    &copy; {{ date('Y') }} PPID Kemenag Sumenep. All rights reserved. Official Portal for Public Information.
+                    &copy; {{ date('Y') }} PPID Kemenag Sumenep. All rights reserved. Official Portal for Public Information.<b>{Syawqi Developer} </b>
                 </p>
             </div>
         </div>

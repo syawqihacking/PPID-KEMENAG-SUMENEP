@@ -8,21 +8,7 @@
             <p class="text-gray-600 max-w-2xl">Access, browse, and download official documents, reports, and standard operating procedures published by the Ministry of Religious Affairs Sumenep.</p>
         </div>
 
-        <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-8 flex flex-col md:flex-row gap-4 items-center justify-between" data-aos="fade-up" data-aos-delay="100">
-            <div class="relative w-full md:w-96">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i data-lucide="search" class="text-gray-400 w-5 h-5"></i>
-                </div>
-                <input type="text" placeholder="Search by document title, reference number, or keyword..." class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-green focus:border-brand-green text-sm">
-            </div>
-            
-            <div class="flex gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 hide-scroll">
-                <button class="px-4 py-1.5 bg-brand-green text-white rounded-full text-xs font-medium whitespace-nowrap shadow-sm">All Categories</button>
-                <button class="px-4 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-50 whitespace-nowrap">Kepegawaian</button>
-                <button class="px-4 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-50 whitespace-nowrap">Keuangan</button>
-                <button class="px-4 py-1.5 bg-white border border-gray-300 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-50 whitespace-nowrap">Program</button>
-            </div>
-        </div>
+
 
         <!-- Search & Filter Form -->
         <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-8" data-aos="fade-up" data-aos-delay="50">
@@ -36,10 +22,9 @@
                 <div class="md:w-48">
                     <select name="category" class="block w-full py-2.5 px-3 border border-gray-300 bg-white rounded-lg focus:ring-brand-green focus:border-brand-green">
                         <option value="">Semua Kategori</option>
-                        <option value="Keuangan" {{ request('category') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
-                        <option value="Kepegawaian" {{ request('category') == 'Kepegawaian' ? 'selected' : '' }}>Kepegawaian</option>
-                        <option value="Program" {{ request('category') == 'Program' ? 'selected' : '' }}>Program</option>
-                        <option value="Umum" {{ request('category') == 'Umum' ? 'selected' : '' }}>Umum</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <button type="submit" class="bg-brand-dark hover:bg-green-900 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm transition">
@@ -56,9 +41,9 @@
                     @php
                         $ext = strtoupper($doc->file_extension);
                         $colorClass = 'bg-gray-50 text-gray-600 border-gray-100';
-                        if($ext == 'PDF') $colorClass = 'bg-green-50 text-brand-green border-green-100';
-                        elseif(in_array($ext, ['DOC', 'DOCX'])) $colorClass = 'bg-orange-50 text-orange-600 border-orange-100';
-                        elseif(in_array($ext, ['XLS', 'XLSX'])) $colorClass = 'bg-blue-50 text-blue-600 border-blue-100';
+                        if($ext == 'PDF') $colorClass = 'bg-red-50 text-red-600 border-red-100';
+                        elseif(in_array($ext, ['DOC', 'DOCX'])) $colorClass = 'bg-blue-50 text-blue-600 border-blue-100';
+                        elseif(in_array($ext, ['XLS', 'XLSX'])) $colorClass = 'bg-green-50 text-green-600 border-green-100';
                     @endphp
                     <div class="w-10 h-10 rounded flex items-center justify-center border {{ $colorClass }}">
                         <span class="text-xs font-bold">{{ $ext }}</span>

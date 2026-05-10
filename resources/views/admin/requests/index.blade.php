@@ -21,6 +21,7 @@
                     <th class="p-4 font-medium">Name</th>
                     <th class="p-4 font-medium">Subject</th>
                     <th class="p-4 font-medium">Status</th>
+                    <th class="p-4 font-medium">Deadline</th>
                     <th class="p-4 font-medium">Date</th>
                     <th class="p-4 font-medium text-right">Actions</th>
                 </tr>
@@ -36,12 +37,25 @@
                     <td class="p-4">
                         @if($req->status === 'pending')
                             <span class="bg-yellow-100 text-yellow-800 text-xs px-2.5 py-1 rounded-full font-medium">Pending</span>
-                        @elseif($req->status === 'approved')
-                            <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">Approved</span>
+                        @elseif($req->status === 'approved' || $req->status === 'Selesai')
+                            <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium">Selesai</span>
                         @elseif($req->status === 'rejected')
                             <span class="bg-red-100 text-red-800 text-xs px-2.5 py-1 rounded-full font-medium">Rejected</span>
                         @else
                             <span class="bg-gray-100 text-gray-800 text-xs px-2.5 py-1 rounded-full font-medium">{{ ucfirst($req->status) }}</span>
+                        @endif
+                    </td>
+                    <td class="p-4">
+                        @if($req->remaining_days !== null)
+                            @if($req->remaining_days > 3)
+                                <span class="text-green-600 font-bold">{{ $req->remaining_days }} Hari</span>
+                            @elseif($req->remaining_days >= 0)
+                                <span class="text-yellow-600 font-bold">{{ $req->remaining_days }} Hari (Segera!)</span>
+                            @else
+                                <span class="text-red-600 font-bold">Terlambat!</span>
+                            @endif
+                        @else
+                            <span class="text-gray-400">-</span>
                         @endif
                     </td>
                     <td class="p-4 text-gray-600">{{ \Carbon\Carbon::parse($req->created_at)->format('d M Y') }}</td>

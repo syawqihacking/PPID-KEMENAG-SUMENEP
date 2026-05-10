@@ -4,13 +4,26 @@
 <div class="bg-gray-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="mb-12 border-b border-gray-200 pb-6" data-aos="fade-up">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Berita & Pengumuman</h1>
-            <p class="text-gray-600 max-w-2xl text-lg">Ikuti perkembangan terbaru, kegiatan, dan pengumuman resmi dari lingkungan Kementerian Agama Kabupaten Sumenep.</p>
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6" data-aos="fade-up">
+            <div class="border-b border-gray-200 pb-6 md:border-0 md:pb-0">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Berita & Pengumuman</h1>
+                <p class="text-gray-600 max-w-2xl text-lg">Ikuti perkembangan terbaru, kegiatan, dan pengumuman resmi dari lingkungan Kementerian Agama Kabupaten Sumenep.</p>
+            </div>
+            
+            <form action="{{ route('news.index') }}" method="GET" class="flex gap-2">
+                <div class="w-48">
+                    <select name="category" onchange="this.form.submit()" class="block w-full py-2.5 px-3 border border-gray-300 bg-white rounded-lg focus:ring-brand-green focus:border-brand-green text-sm">
+                        <option value="">Semua Kategori</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>{{ $category }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @forelse($newsList as $index => $newsItem)
+            @forelse($news as $index => $newsItem)
             <!-- News Card -->
             <a href="{{ route('news.show', $newsItem->slug) }}" class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition duration-300 transform hover:-translate-y-1 flex flex-col group" data-aos="fade-up" data-aos-delay="{{ 100 * ($index % 3 + 1) }}">
                 <div class="relative h-56 bg-gray-200 overflow-hidden">
@@ -42,7 +55,7 @@
 
         <!-- Pagination -->
         <div class="mt-12 flex justify-center" data-aos="fade-up">
-            {{ $newsList->links('pagination::tailwind') }}
+            {{ $news->links('pagination::tailwind') }}
         </div>
         
     </div>

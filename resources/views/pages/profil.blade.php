@@ -26,9 +26,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl" data-aos="fade-up">
             <h2 class="text-3xl font-bold text-gray-900 mb-6">Latar Belakang</h2>
-            <p class="text-gray-600 leading-relaxed text-lg">
-                Berdasarkan <strong class="text-gray-900">Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik (KIP)</strong>, Kementerian Agama Kabupaten Sumenep berkomitmen untuk memberikan pelayanan informasi publik yang cepat, tepat, dan sederhana. PPID Kemenag Sumenep bertanggung jawab di bidang penyimpanan, pendokumentasian, penyediaan, dan pelayanan informasi di lingkungan instansi.
-            </p>
+            <div class="text-gray-600 leading-relaxed text-lg prose">
+                {!! nl2br(e($settings['profil_latar_belakang'] ?? 'Berdasarkan Undang-Undang Nomor 14 Tahun 2008 tentang Keterbukaan Informasi Publik (KIP), Kementerian Agama Kabupaten Sumenep berkomitmen untuk memberikan pelayanan informasi publik yang cepat, tepat, dan sederhana.')) !!}
+            </div>
         </div>
     </div>
 </div>
@@ -47,7 +47,7 @@
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Visi</h3>
                 <p class="text-gray-600 italic leading-relaxed border-l-4 border-brand-green pl-4">
-                    "Terwujudnya pelayanan informasi yang transparan, akuntabel, dan responsif untuk mewujudkan tata kelola kepemerintahan yang baik dan bersih di lingkungan Kementerian Agama Kabupaten Sumenep."
+                    "{!! nl2br(e($settings['profil_visi'] ?? 'Terwujudnya pelayanan informasi yang transparan, akuntabel, dan responsif.')) !!}"
                 </p>
             </div>
 
@@ -58,22 +58,17 @@
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-4">Misi</h3>
                 <ul class="text-gray-600 space-y-3">
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="check" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
-                        <span>Meningkatkan kualitas pelayanan informasi publik.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="check" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
-                        <span>Menyediakan informasi publik yang akurat dan mudah diakses.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="check" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
-                        <span>Meningkatkan kompetensi SDM pengelola informasi.</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i data-lucide="check" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
-                        <span>Membangun sistem informasi dan dokumentasi yang andal.</span>
-                    </li>
+                    @php
+                        $misiList = explode("\n", $settings['profil_misi'] ?? 'Meningkatkan kualitas pelayanan informasi publik.');
+                    @endphp
+                    @foreach($misiList as $misi)
+                        @if(trim($misi) != '')
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check" class="w-5 h-5 text-brand-green shrink-0 mt-0.5"></i>
+                            <span>{{ trim($misi) }}</span>
+                        </li>
+                        @endif
+                    @endforeach
                 </ul>
             </div>
         </div>

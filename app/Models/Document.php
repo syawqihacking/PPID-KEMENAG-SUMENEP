@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    //
+    protected $fillable = ['title', 'description', 'file_path', 'file_extension', 'category', 'download_count'];
 }

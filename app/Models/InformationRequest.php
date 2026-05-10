@@ -13,4 +13,19 @@ class InformationRequest extends Model
         'message',
         'status',
     ];
+
+    public function getDeadlineAttribute()
+    {
+        return $this->created_at->addDays(10);
+    }
+
+    public function getRemainingDaysAttribute()
+    {
+        if ($this->status === 'Selesai' || $this->status === 'approved') {
+            return null;
+        }
+        
+        $diff = now()->diffInDays($this->deadline, false);
+        return (int) $diff;
+    }
 }
