@@ -7,12 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class InformationRequest extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'subject',
         'message',
         'status',
+        'admin_response',
+        'response_file',
+        'objection_reason',
+        'objection_status',
+        'objection_date',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getDeadlineAttribute()
     {

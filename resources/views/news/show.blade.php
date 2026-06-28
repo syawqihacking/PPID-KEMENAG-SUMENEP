@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', $news->title . ' - PPID Kemenag Sumenep')
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($news->content), 160))
+@section('meta_image', $news->image_path)
+
 @section('content')
 <div class="bg-gray-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,9 +38,45 @@
                 </div>
                 @endif
 
-                <div class="prose prose-lg text-gray-700 max-w-none">
+                <div class="prose prose-lg text-gray-700 max-w-none mb-12">
                     {!! nl2br(e($news->content)) !!}
                 </div>
+
+                <!-- Share Buttons -->
+                <div class="mt-12 pt-8 border-t border-gray-100">
+                    <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Bagikan Berita Ini:</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="https://wa.me/?text={{ urlencode($news->title . ' - ' . url()->current()) }}" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-[#25D366] text-white rounded-xl font-bold text-sm hover:scale-105 transition shadow-lg shadow-green-200">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-[#1877F2] text-white rounded-xl font-bold text-sm hover:scale-105 transition shadow-lg shadow-blue-200">
+                            <i data-lucide="facebook" class="w-4 h-4"></i> Facebook
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text={{ urlencode($news->title) }}&url={{ urlencode(url()->current()) }}" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-[#000000] text-white rounded-xl font-bold text-sm hover:scale-105 transition shadow-lg shadow-gray-200">
+                            <i data-lucide="twitter" class="w-4 h-4"></i> Twitter
+                        </a>
+                        <button onclick="copyToClipboard()" class="flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition">
+                            <i data-lucide="copy" class="w-4 h-4"></i> <span id="copy-text">Salin Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <script>
+                    function copyToClipboard() {
+                        const el = document.createElement('textarea');
+                        el.value = window.location.href;
+                        document.body.appendChild(el);
+                        el.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+                        
+                        const btnText = document.getElementById('copy-text');
+                        btnText.innerText = 'Tersalin!';
+                        setTimeout(() => {
+                            btnText.innerText = 'Salin Link';
+                        }, 2000);
+                    }
+                </script>
             </div>
 
             <!-- Sidebar -->

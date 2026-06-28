@@ -43,21 +43,41 @@
         </div>
 
         <!-- Status Management -->
+        <!-- Status Management & Response -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h4 class="font-bold text-gray-900 mb-4">Manage Status</h4>
-            <form action="{{ route('admin.requests.update', $request->id) }}" method="POST">
+            <h4 class="font-bold text-gray-900 mb-4">Proses Permohonan</h4>
+            <form action="{{ route('admin.requests.update', $request->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+                
                 <div class="mb-4">
-                    <label class="block text-xs font-medium text-gray-500 mb-2">Current Status</label>
+                    <label class="block text-xs font-medium text-gray-500 mb-2">Ubah Status</label>
                     <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-brand-green focus:border-brand-green text-sm">
-                        <option value="pending" {{ $request->status == 'pending' ? 'selected' : '' }}>Pending (Menunggu)</option>
-                        <option value="approved" {{ $request->status == 'approved' ? 'selected' : '' }}>Approved (Disetujui)</option>
-                        <option value="rejected" {{ $request->status == 'rejected' ? 'selected' : '' }}>Rejected (Ditolak)</option>
+                        <option value="Menunggu" {{ $request->status == 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+                        <option value="Diproses" {{ $request->status == 'Diproses' ? 'selected' : '' }}>Diproses</option>
+                        <option value="Selesai" {{ $request->status == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="Ditolak" {{ $request->status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
                     </select>
                 </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-500 mb-2">Balasan Resmi Admin</label>
+                    <textarea name="admin_response" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-brand-green focus:border-brand-green text-sm" placeholder="Tuliskan alasan penolakan atau keterangan balasan...">{{ $request->admin_response }}</textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-medium text-gray-500 mb-2">Lampirkan File Jawaban (Opsional)</label>
+                    @if($request->response_file)
+                        <div class="mb-2">
+                            <a href="{{ asset('storage/responses/'.$request->response_file) }}" target="_blank" class="text-xs text-brand-green hover:underline flex items-center gap-1"><i data-lucide="paperclip" class="w-3 h-3"></i> Lihat File Saat Ini</a>
+                        </div>
+                    @endif
+                    <input type="file" name="response_file" class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
+                    <p class="text-[10px] text-gray-400 mt-1">Maks. 5MB (PDF/JPG/PNG/DOCX)</p>
+                </div>
+
                 <button type="submit" class="w-full bg-brand-dark hover:bg-green-900 text-white font-medium py-2 px-4 rounded-md shadow-sm transition">
-                    Update Status
+                    Simpan Perubahan
                 </button>
             </form>
         </div>

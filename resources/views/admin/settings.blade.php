@@ -10,12 +10,11 @@
     </div>
     @endif
 
-    <div class="mb-6 border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8">
+    <div class="mb-6 border-b border-gray-200 overflow-x-auto scrollbar-hide">
+        <nav class="-mb-px flex space-x-8 min-w-max">
             <button onclick="switchTab('tab-profil')" id="btn-tab-profil" class="tab-btn border-brand-green text-brand-green whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Profil & Visi Misi</button>
             <button onclick="switchTab('tab-kontak')" id="btn-tab-kontak" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Kontak & Lokasi</button>
             <button onclick="switchTab('tab-prosedur')" id="btn-tab-prosedur" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Prosedur & Maklumat</button>
-            <button onclick="switchTab('tab-akun')" id="btn-tab-akun" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Akun & Keamanan</button>
         </nav>
     </div>
 
@@ -105,58 +104,13 @@
             </div>
         </form>
     </div>
-
-    <!-- Tab Akun -->
-    <div id="tab-akun" class="tab-content hidden">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Change Password -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i data-lucide="lock" class="w-5 h-5"></i> Ubah Password</h2>
-                <form action="{{ route('admin.settings.password') }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Password Lama</label>
-                            <input type="password" name="current_password" required class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-brand-green focus:border-brand-green">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Password Baru</label>
-                            <input type="password" name="new_password" required class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-brand-green focus:border-brand-green">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password Baru</label>
-                            <input type="password" name="new_password_confirmation" required class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-brand-green focus:border-brand-green">
-                        </div>
-                        <button type="submit" class="w-full bg-brand-dark hover:bg-green-900 text-white font-medium py-2 px-6 rounded-lg text-sm transition">Perbarui Password</button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Account Info -->
-            <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i data-lucide="user" class="w-5 h-5"></i> Info Akun</h2>
-                <div class="space-y-4 text-sm">
-                    <div class="flex flex-col gap-1 py-2 border-b border-gray-100">
-                        <span class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Nama Administrator</span>
-                        <span class="font-medium text-gray-900 text-base">{{ auth()->user()->name }}</span>
-                    </div>
-                    <div class="flex flex-col gap-1 py-2 border-b border-gray-100">
-                        <span class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Email</span>
-                        <span class="font-medium text-gray-900 text-base">{{ auth()->user()->email }}</span>
-                    </div>
-                    <div class="flex flex-col gap-1 py-2">
-                        <span class="text-gray-500 text-xs uppercase tracking-wider font-semibold">Bergabung Sejak</span>
-                        <span class="font-medium text-gray-900 text-base">{{ auth()->user()->created_at->format('d F Y') }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
     function switchTab(tabId) {
+        // Update hash
+        window.location.hash = tabId.replace('tab-', '');
+        
         // Hide all contents
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.add('hidden');
@@ -165,8 +119,10 @@
         
         // Show target content
         const target = document.getElementById(tabId);
-        target.classList.remove('hidden');
-        target.classList.add('block');
+        if(target) {
+            target.classList.remove('hidden');
+            target.classList.add('block');
+        }
         
         // Update tab styling
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -175,8 +131,18 @@
         });
         
         const activeBtn = document.getElementById('btn-' + tabId);
-        activeBtn.classList.add('border-brand-green', 'text-brand-green');
-        activeBtn.classList.remove('border-transparent', 'text-gray-500');
+        if(activeBtn) {
+            activeBtn.classList.add('border-brand-green', 'text-brand-green');
+            activeBtn.classList.remove('border-transparent', 'text-gray-500');
+        }
     }
+
+    // Handle hash on load
+    window.addEventListener('DOMContentLoaded', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            switchTab('tab-' + hash);
+        }
+    });
 </script>
 @endsection

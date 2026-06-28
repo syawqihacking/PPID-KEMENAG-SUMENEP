@@ -1,84 +1,113 @@
 @extends('layouts.app')
 
+@section('title', 'Hasil Pencarian: ' . $q)
+
 @section('content')
-<!-- Hero Section -->
-<div class="relative bg-brand-dark py-12 border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-down">
-        <h1 class="text-3xl font-bold text-white mb-4">Hasil Pencarian</h1>
-        <form action="{{ route('search') }}" method="GET" class="max-w-2xl mx-auto">
-            <div class="relative">
-                <input type="text" name="q" value="{{ $q }}" placeholder="Cari informasi, berita, atau dokumen..." class="w-full pl-5 pr-12 py-3 rounded-full border-0 shadow-lg text-gray-900 focus:ring-2 focus:ring-brand-green" required minlength="2">
-                <button type="submit" class="absolute right-3 top-2.5 text-gray-400 hover:text-brand-green">
-                    <i data-lucide="search" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </form>
-        @if($q)
-            <p class="text-green-50 mt-4 text-sm">Menampilkan hasil untuk: <strong>"{{ $q }}"</strong></p>
-        @endif
-    </div>
-</div>
-
-<div class="py-12 bg-gray-50 min-h-[50vh]">
+<div class="bg-gray-50 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        @if(!$q || strlen($q) < 2)
-            <div class="text-center py-20 text-gray-500">
-                <i data-lucide="search" class="w-16 h-16 mx-auto mb-4 text-gray-300"></i>
-                <p class="text-lg">Silakan masukkan minimal 2 karakter untuk melakukan pencarian.</p>
-            </div>
-        @elseif($news->isEmpty() && $documents->isEmpty())
-            <div class="text-center py-20 text-gray-500">
-                <i data-lucide="file-question" class="w-16 h-16 mx-auto mb-4 text-gray-300"></i>
-                <h3 class="text-xl font-bold text-gray-700 mb-2">Tidak ada hasil ditemukan</h3>
-                <p>Maaf, kami tidak dapat menemukan informasi yang cocok dengan kata kunci "{{ $q }}".<br>Silakan coba dengan kata kunci lain.</p>
-            </div>
-        @else
-            <!-- Hasil Berita -->
-            @if($news->isNotEmpty())
-            <div class="mb-12">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-200 pb-2">
-                    <i data-lucide="newspaper" class="w-5 h-5 text-brand-green"></i> Berita & Artikel ({{ $news->count() }})
-                </h2>
-                <div class="space-y-4">
-                    @foreach($news as $item)
-                    <a href="{{ route('news.show', $item->slug) }}" class="block bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition">
-                        <h3 class="text-lg font-bold text-brand-dark mb-2">{{ $item->title }}</h3>
-                        <p class="text-sm text-gray-500 mb-2">{{ $item->published_at->format('d M Y') }}</p>
-                        <p class="text-gray-600 text-sm line-clamp-2">{{ Str::limit(strip_tags($item->content), 150) }}</p>
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-            @endif
+        <div class="mb-12" data-aos="fade-up">
+            <h1 class="text-3xl font-extrabold text-gray-900">Hasil Pencarian untuk: <span class="text-brand-green">"{{ $q }}"</span></h1>
+            <p class="text-gray-500 mt-2">Menampilkan hasil pencarian dari berbagai kategori informasi.</p>
+        </div>
 
-            <!-- Hasil Dokumen -->
-            @if($documents->isNotEmpty())
-            <div>
-                <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-200 pb-2">
-                    <i data-lucide="file-text" class="w-5 h-5 text-yellow-600"></i> Dokumen Publik ({{ $documents->count() }})
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($documents as $doc)
-                    <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition flex flex-col h-full">
-                        <div class="flex-grow">
-                            <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded mb-3">{{ $doc->category }}</span>
-                            <h3 class="font-bold text-gray-900 mb-2">{{ $doc->title }}</h3>
-                            <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{ $doc->description }}</p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                            <span class="text-xs text-gray-400">{{ $doc->created_at->format('d M Y') }}</span>
-                            <a href="{{ Storage::url($doc->file_path) }}" target="_blank" class="text-brand-green hover:text-green-800 text-sm font-medium flex items-center gap-1">
-                                <i data-lucide="download" class="w-4 h-4"></i> Unduh
-                            </a>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- News Results -->
+            <div class="lg:col-span-2 space-y-8">
+                <section data-aos="fade-up">
+                    <h2 class="flex items-center text-xl font-bold text-gray-900 mb-6">
+                        <i data-lucide="newspaper" class="w-6 h-6 mr-2 text-brand-green"></i>
+                        Berita & Pengumuman
+                        <span class="ml-3 px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">{{ $news->count() }}</span>
+                    </h2>
+                    
+                    @forelse($news as $item)
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-4 hover:shadow-md transition">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            @if($item->image_path)
+                            <div class="w-full md:w-48 h-32 flex-shrink-0">
+                                <img src="{{ $item->image_path }}" class="w-full h-full object-cover rounded-xl" alt="{{ $item->title }}">
+                            </div>
+                            @endif
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2 hover:text-brand-green">
+                                    <a href="{{ route('news.show', $item->slug) }}">{{ $item->title }}</a>
+                                </h3>
+                                <p class="text-gray-500 text-sm line-clamp-2 mb-4">{{ strip_tags($item->content) }}</p>
+                                <div class="text-xs text-gray-400 flex items-center gap-3">
+                                    <span class="flex items-center"><i data-lucide="calendar" class="w-3 h-3 mr-1"></i> {{ $item->created_at->format('d M Y') }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <div class="bg-white p-8 rounded-2xl text-center border border-dashed border-gray-200">
+                        <p class="text-gray-500">Tidak ada berita yang sesuai dengan kata kunci tersebut.</p>
+                    </div>
+                    @endforelse
+                </section>
+
+                <section data-aos="fade-up" data-aos-delay="100">
+                    <h2 class="flex items-center text-xl font-bold text-gray-900 mb-6">
+                        <i data-lucide="file-text" class="w-6 h-6 mr-2 text-brand-green"></i>
+                        Dokumen & Informasi Publik
+                        <span class="ml-3 px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">{{ $docs->count() }}</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @forelse($docs as $doc)
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:border-brand-green transition group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-green-50 text-brand-green rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand-green group-hover:text-white transition">
+                                    <i data-lucide="file" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-gray-900 mb-1 leading-tight">{{ $doc->title }}</h3>
+                                    <p class="text-xs text-gray-400 uppercase tracking-tighter">{{ $doc->type ?? 'Dokumen' }}</p>
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="inline-block mt-3 text-xs font-bold text-brand-green hover:underline">Download File</a>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="col-span-full bg-white p-8 rounded-2xl text-center border border-dashed border-gray-200">
+                            <p class="text-gray-500">Tidak ada dokumen yang sesuai.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                </section>
+            </div>
+
+            <!-- FAQ Sidebar Results -->
+            <div class="space-y-8">
+                <section data-aos="fade-left">
+                    <h2 class="flex items-center text-xl font-bold text-gray-900 mb-6">
+                        <i data-lucide="help-circle" class="w-6 h-6 mr-2 text-brand-green"></i>
+                        Tanya Jawab (FAQ)
+                        <span class="ml-3 px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full">{{ $faqs->count() }}</span>
+                    </h2>
+
+                    @forelse($faqs as $faq)
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-4">
+                        <h3 class="text-sm font-bold text-gray-900 mb-2">Q: {{ $faq->question }}</h3>
+                        <p class="text-xs text-gray-600">A: {{ $faq->answer }}</p>
+                    </div>
+                    @empty
+                    <div class="bg-white p-8 rounded-2xl text-center border border-dashed border-gray-200">
+                        <p class="text-gray-500">Tidak ada FAQ yang sesuai.</p>
+                    </div>
+                    @endforelse
+                </section>
+
+                <!-- Search Tips Card -->
+                <div class="bg-brand-dark text-white p-8 rounded-[2.5rem] shadow-xl" data-aos="fade-left" data-aos-delay="100">
+                    <h3 class="text-lg font-bold mb-4">Tips Pencarian</h3>
+                    <ul class="text-sm space-y-3 text-gray-300">
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-green mt-1 flex-shrink-0"></i> Gunakan kata kunci yang spesifik.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-green mt-1 flex-shrink-0"></i> Pastikan ejaan kata sudah benar.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-green mt-1 flex-shrink-0"></i> Jika belum menemukan, hubungi kami via WhatsApp.</li>
+                    </ul>
                 </div>
             </div>
-            @endif
-
-        @endif
+        </div>
     </div>
 </div>
 @endsection

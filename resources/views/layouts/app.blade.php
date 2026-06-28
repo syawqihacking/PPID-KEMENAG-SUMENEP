@@ -3,13 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PPID Kemenag Sumenep</title>
+    <title>@yield('title', 'PPID Kemenag Sumenep')</title>
+    
+    <!-- Meta Tags for SEO & Social Media -->
+    <meta name="description" content="@yield('meta_description', 'Portal Resmi Layanan Informasi dan Dokumentasi Kementerian Agama Kabupaten Sumenep.')">
+    <meta property="og:title" content="@yield('title', 'PPID Kemenag Sumenep')">
+    <meta property="og:description" content="@yield('meta_description', 'Portal Resmi Layanan Informasi dan Dokumentasi Kementerian Agama Kabupaten Sumenep.')">
+    <meta property="og:image" content="@yield('meta_image', asset('logo_kemenag.png'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #128c7e;
+            color: #FFF;
+        }
+        .whatsapp-float span {
+            font-size: 14px;
+            font-weight: 700;
+            margin-left: 10px;
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .whatsapp-float span { display: block; }
+        }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
@@ -42,7 +83,15 @@
                     <input type="text" name="q" placeholder="Cari..." class="w-32 lg:w-48 bg-gray-50 border border-gray-200 rounded-full pl-8 pr-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-green focus:border-brand-green transition-all" required minlength="2">
                     <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-2.5 top-2"></i>
                 </form>
-                <a href="{{ route('login') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">Login</a>
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">Dashboard Admin</a>
+                    @elseif(auth()->user()->isOperator())
+                        <a href="{{ route('operator.livechat.index') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">CS Dashboard</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="bg-brand-dark text-white px-5 py-2 rounded-md font-medium text-sm hover:bg-green-900 transition shadow-sm">Login</a>
+                @endauth
             </div>
 
             <!-- Mobile menu button -->
@@ -61,7 +110,15 @@
                 <a href="{{ route('prosedur.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">Standar Layanan</a>
                 <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">News</a>
                 <a href="{{ route('documents.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-brand-green hover:bg-gray-50">PPID Info</a>
-                <a href="{{ route('login') }}" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-dark text-white hover:bg-green-900">Login Admin</a>
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-dark text-white hover:bg-green-900">Dashboard Admin</a>
+                    @elseif(auth()->user()->isOperator())
+                        <a href="{{ route('operator.livechat.index') }}" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-dark text-white hover:bg-green-900">Dashboard CS</a>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="block px-3 py-2 mt-4 text-center rounded-md text-base font-medium bg-brand-dark text-white hover:bg-green-900">Login</a>
+                @endauth
             </div>
         </div>
     </nav>
@@ -126,7 +183,69 @@
         </div>
     </footer>
 
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', \App\Models\Setting::get('kontak_wa', '6283166576553')) }}?text=Halo%20PPID%20Kemenag%20Sumenep,%20saya%20ingin%20bertanya..." class="whatsapp-float" target="_blank">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        <span>Hubungi Kami</span>
+    </a>
+
+    <!-- AI Chatbot Floating Button & Window -->
+    <div id="chatbot-container" class="fixed bottom-[90px] right-[30px] z-[1000] flex flex-col items-end">
+        <!-- Chat Window (Hidden by default) -->
+        <div id="chatbot-window" class="hidden w-[350px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden mb-4 flex flex-col transition-all duration-300 transform origin-bottom-right" style="height: 450px;">
+            <!-- Header -->
+            <div class="bg-brand-dark text-white p-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Asisten Virtual PPID</h4>
+                        <p class="text-[10px] text-green-200">Online | AI Powered</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="chatbot-reset" class="text-white/80 hover:text-white transition" title="Mulai Obrolan Baru">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                    <button id="chatbot-close" class="text-white/80 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Messages Area -->
+            <div id="chatbot-messages" class="flex-grow p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3 text-sm">
+                <!-- Welcome Message -->
+                <div class="flex gap-2 max-w-[85%]">
+                    <div class="w-6 h-6 bg-brand-green rounded-full flex-shrink-0 flex items-center justify-center text-white mt-1">
+                        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm text-gray-700 shadow-sm leading-relaxed text-left text-[13px]">
+                        Halo! Saya Asisten Virtual PPID Kemenag Sumenep. Ada yang bisa saya bantu terkait layanan informasi publik?
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="p-3 bg-white border-t border-gray-100">
+                <form id="chatbot-form" class="flex items-center gap-2">
+                    <input type="text" id="chatbot-input" class="flex-grow px-3 py-2 bg-gray-100 border-transparent focus:bg-white border focus:border-brand-green rounded-full text-sm outline-none transition" placeholder="Ketik pesan Anda..." required autocomplete="off">
+                    <button type="submit" id="chatbot-submit" class="w-9 h-9 bg-brand-green text-white rounded-full flex items-center justify-center flex-shrink-0 hover:bg-brand-dark transition shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i data-lucide="send" class="w-4 h-4 ml-0.5"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Floating Toggle Button -->
+        <button id="chatbot-toggle" class="w-[60px] h-[60px] bg-brand-dark text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform duration-300">
+            <i data-lucide="bot-message-square" class="w-7 h-7"></i>
+        </button>
+    </div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         lucide.createIcons();
         AOS.init({
@@ -144,6 +263,233 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
+
+        // Chatbot Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotClose = document.getElementById('chatbot-close');
+            const chatbotReset = document.getElementById('chatbot-reset');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotForm = document.getElementById('chatbot-form');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotSubmit = document.getElementById('chatbot-submit');
+            
+            // Notification sound for new incoming messages
+            const notifSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+
+            let sessionId = localStorage.getItem('chatbot_session_id');
+            if (!sessionId) {
+                sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('chatbot_session_id', sessionId);
+            }
+            let lastId = 0;
+            let pollInterval = null;
+            let hasPlayedCsSound = false;
+
+            // Configure marked options
+            if (window.marked) {
+                marked.setOptions({
+                    breaks: true, // converts \n to <br>
+                    gfm: true     // GitHub Flavored Markdown
+                });
+            }
+
+            // Toggle window visibility
+            chatbotToggle.addEventListener('click', () => {
+                chatbotWindow.classList.toggle('hidden');
+                if(!chatbotWindow.classList.contains('hidden')) {
+                    chatbotInput.focus();
+                    startPolling();
+                    pollMessages(); // Fetch immediately
+                } else {
+                    stopPolling();
+                }
+            });
+
+            chatbotClose.addEventListener('click', () => {
+                chatbotWindow.classList.add('hidden');
+                stopPolling();
+            });
+
+            // Reset Chat Session
+            chatbotReset.addEventListener('click', () => {
+                if(confirm('Mulai obrolan baru dan hapus riwayat percakapan ini?')) {
+                    localStorage.removeItem('chatbot_session_id');
+                    sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('chatbot_session_id', sessionId);
+                    lastId = 0;
+                    hasPlayedCsSound = false;
+                    chatbotMessages.innerHTML = `
+                        <div class="flex gap-2 max-w-[85%]">
+                            <div class="w-6 h-6 bg-brand-green rounded-full flex-shrink-0 flex items-center justify-center text-white mt-1">
+                                <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                            </div>
+                            <div class="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm text-gray-700 shadow-sm leading-relaxed text-left text-[13px]">
+                                Halo! Saya Asisten Virtual PPID Kemenag Sumenep. Riwayat obrolan telah dibersihkan. Ada yang bisa saya bantu sekarang?
+                            </div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                }
+            });
+
+            // Append message helper
+            function appendMessage(sender, text, msgId = null, playSound = false) {
+                if (msgId && document.querySelector(`[data-msg-id="${msgId}"]`)) return;
+                
+                const isUser = sender === 'user';
+                const div = document.createElement('div');
+                div.className = `flex gap-2 max-w-[85%] ${isUser ? 'self-end flex-row-reverse' : ''}`;
+                if (msgId) {
+                    div.setAttribute('data-msg-id', msgId);
+                    if (msgId > lastId) lastId = msgId;
+                }
+                
+                const avatar = isUser ? '' : `
+                    <div class="w-6 h-6 bg-brand-green rounded-full flex-shrink-0 flex items-center justify-center text-white mt-1">
+                        <i data-lucide="${sender === 'admin' ? 'headphones' : 'bot'}" class="w-3.5 h-3.5"></i>
+                    </div>
+                `;
+                
+                // Parse markdown for non-user messages
+                let displayHtml = text;
+                if (!isUser && window.marked) {
+                    displayHtml = marked.parse(text);
+                } else if (!isUser) {
+                    // Fallback if marked is somehow not loaded
+                    displayHtml = text.replace(/\n/g, '<br>');
+                }
+
+                // Add markdown styling classes if it's parsed HTML
+                const contentClass = !isUser ? '[&>p]:mb-2 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:pl-4 [&>ul]:mb-2 [&>ol]:list-decimal [&>ol]:pl-4 [&>ol]:mb-2 [&>strong]:font-bold [&>em]:italic [&>a]:text-blue-600 [&>a]:underline whitespace-normal' : 'whitespace-pre-wrap';
+                
+                const messageBubble = `
+                    <div class="${isUser ? 'bg-brand-dark text-white rounded-tr-sm' : (sender === 'admin' ? 'bg-blue-50 border border-blue-100 text-gray-800 rounded-tl-sm' : 'bg-white border border-gray-100 text-gray-700 rounded-tl-sm')} p-3 rounded-2xl shadow-sm leading-relaxed text-left text-[13px] inline-block ${contentClass}">${displayHtml}</div>
+                `;
+                
+                div.innerHTML = avatar + messageBubble;
+                chatbotMessages.appendChild(div);
+                if (window.lucide) lucide.createIcons();
+                
+                // Scroll to bottom
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+                if (playSound && !isUser && !chatbotWindow.classList.contains('hidden')) {
+                    try { notifSound.play(); } catch(e) {}
+                }
+            }
+
+            // Show typing indicator
+            function showTyping() {
+                const id = 'typing-' + Date.now();
+                const div = document.createElement('div');
+                div.id = id;
+                div.className = `flex gap-2 max-w-[85%]`;
+                div.innerHTML = `
+                    <div class="w-6 h-6 bg-brand-green rounded-full flex-shrink-0 flex items-center justify-center text-white mt-1">
+                        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1">
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                `;
+                chatbotMessages.appendChild(div);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                if (window.lucide) lucide.createIcons();
+                return id;
+            }
+
+            function removeTyping(id) {
+                const el = document.getElementById(id);
+                if(el) el.remove();
+            }
+
+            async function pollMessages() {
+                try {
+                    const response = await fetch(`{{ route('chatbot.poll') }}?session_id=${sessionId}&last_id=${lastId}`);
+                    const data = await response.json();
+                    
+                    if (data.messages && data.messages.length > 0) {
+                        // Clear welcome message if it's the first time we load history
+                        if (lastId === 0) {
+                            chatbotMessages.innerHTML = ''; 
+                        }
+
+                        data.messages.forEach(msg => {
+                            // Only play sound ONCE when the very first message from CS (Admin) arrives
+                            const shouldPlaySound = (lastId !== 0 && msg.sender_type === 'admin' && !hasPlayedCsSound);
+                            if (shouldPlaySound) hasPlayedCsSound = true;
+                            
+                            appendMessage(msg.sender_type, msg.message, msg.id, shouldPlaySound);
+                        });
+                    }
+                } catch (e) {
+                    console.error("Polling error", e);
+                }
+            }
+
+            function startPolling() {
+                if (pollInterval) return;
+                pollInterval = setInterval(pollMessages, 3000);
+            }
+
+            function stopPolling() {
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                }
+            }
+
+            // Handle submission
+            chatbotForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = chatbotInput.value.trim();
+                if(!message) return;
+
+                // Disable input & button
+                chatbotInput.value = '';
+                chatbotInput.disabled = true;
+                chatbotSubmit.disabled = true;
+
+                // Append optimistic user message (without ID, polling will fetch it and replace/dedup if we used IDs, but since we don't have ID here, polling will actually duplicate it if we aren't careful. Let's just wait for polling or use a temp ID!)
+                // Actually, to prevent duplicates, we don't append optimistic user message. We wait for POST response to give us IDs.
+                
+                // Show typing indicator
+                const typingId = showTyping();
+
+                try {
+                    const response = await fetch("{{ route('chatbot.chat') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ message, session_id: sessionId })
+                    });
+
+                    const data = await response.json();
+                    
+                    removeTyping(typingId);
+                    
+                    // If response returns messages array (userMsgId, botMsgId), we can just call pollMessages immediately to render them!
+                    await pollMessages();
+
+                } catch (error) {
+                    removeTyping(typingId);
+                    appendMessage('bot', 'Maaf, sepertinya koneksi terputus. Silakan coba lagi nanti.');
+                } finally {
+                    chatbotInput.disabled = false;
+                    chatbotSubmit.disabled = false;
+                    chatbotInput.focus();
+                }
+            });
+            
+            // Initial load of messages if session exists
+            pollMessages();
+        });
     </script>
 </body>
 </html>

@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminNewsController;
 use App\Http\Controllers\AdminDocumentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminProfileController;
 
 // Public Routes
 Route::get('/', [PublicController::class, 'home'])->name('home');
@@ -29,37 +30,48 @@ Route::get('/permohonan-informasi/success/{id}', [PublicController::class, 'succ
 Route::get('/permohonan-informasi/receipt/{id}', [PublicController::class, 'receipt'])->name('requests.receipt');
 Route::get('/cek-status', [PublicController::class, 'trackRequest'])->name('requests.track');
 
-// Authentication Routes
-Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/admin/login', [AuthController::class, 'login']);
-Route::post('/admin/logout', [AuthController::class, 'logout'])->name('logout');
+// Authentication Routes (Publik & Admin)
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin Routes
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+// Operator Routes (Customer Service Live Chat)
+Route::prefix('operator')->name('operator.')->middleware(['auth', 'role:operator'])->group(function () {
+    Route::get('/livechat', [\App\Http\Controllers\AdminLiveChatController::class, 'index'])->name('livechat.index');
+    Route::get('/livechat/{session}', [\App\Http\Controllers\AdminLiveChatController::class, 'show'])->name('livechat.show');
+    Route::post('/livechat/{session}/reply', [\App\Http\Controllers\AdminLiveChatController::class, 'reply'])->name('livechat.reply');
+    Route::post('/livechat/{session}/close', [\App\Http\Controllers\AdminLiveChatController::class, 'close'])->name('livechat.close');
+    Route::get('/livechat/{session}/poll', [\App\Http\Controllers\AdminLiveChatController::class, 'fetchMessages'])->name('livechat.poll');
+});
+
+// Admin Routes (Admin PPID)
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     
-    // Settings Management
-    Route::get('/settings', [AdminController::class, 'settings'])->name('settings.index');
-    Route::put('/settings/password', [AdminController::class, 'updatePassword'])->name('settings.password');
-    Route::put('/settings/general', [AdminController::class, 'updateGeneralSettings'])->name('settings.general');
-    
-    // Admin DIP
+    // Profile & Security
+    Route::get('/profile', [AdminProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/session-info', [AdminProfileController::class, 'sessionInfo'])->name('profile.session');
+    Route::put('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Content Management
+    Route::resource('news', AdminNewsController::class);
+    Route::resource('documents', AdminDocumentController::class);
     Route::resource('dip', \App\Http\Controllers\AdminPublicInformationController::class);
-    
-    // Admin Reviews
+    Route::resource('faqs', \App\Http\Controllers\AdminFaqController::class);
+
+    // Managerial & Settings
+    Route::resource('chatbot_knowledge', \App\Http\Controllers\AdminChatbotKnowledgeController::class)->except(['show']);
+
+    Route::get('/settings', [AdminController::class, 'settings'])->name('settings.index');
+    Route::put('/settings/general', [AdminController::class, 'updateGeneralSettings'])->name('settings.general');
     Route::get('/reviews', [\App\Http\Controllers\AdminController::class, 'reviews'])->name('reviews.index');
     Route::put('/reviews/{review}/approve', [\App\Http\Controllers\AdminController::class, 'approveReview'])->name('reviews.approve');
     Route::delete('/reviews/{review}', [\App\Http\Controllers\AdminController::class, 'deleteReview'])->name('reviews.destroy');
-    
-    // Admin FAQ
-    Route::resource('faqs', \App\Http\Controllers\AdminFaqController::class);
-
-    // Admin News
-    Route::resource('news', AdminNewsController::class);
-    
-    // Admin Documents
-    Route::resource('documents', AdminDocumentController::class);
-    
-    // Admin Requests
     Route::resource('requests', \App\Http\Controllers\AdminRequestController::class)->only(['index', 'show', 'update']);
 });
+
+// Chatbot Route
+Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
+Route::get('/chatbot/poll', [\App\Http\Controllers\ChatbotController::class, 'poll'])->name('chatbot.poll');

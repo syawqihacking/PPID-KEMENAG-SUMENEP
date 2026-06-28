@@ -21,7 +21,7 @@ class SettingsSeeder extends Seeder
 
             // Kontak
             ['key' => 'kontak_alamat', 'value' => 'Jl. KH. Mansyur No. 2, Kolor, Kec. Kota Sumenep, Kabupaten Sumenep, Jawa Timur 69417', 'group' => 'kontak', 'type' => 'textarea'],
-            ['key' => 'kontak_telepon', 'value' => '(0328) 662-124', 'group' => 'kontak', 'type' => 'text'],
+            ['key' => 'kontak_wa', 'value' => '6283166576553', 'group' => 'kontak', 'type' => 'text'],
             ['key' => 'kontak_email', 'value' => 'ppid.sumenep@kemenag.go.id, kankemenag.sumenep@kemenag.go.id', 'group' => 'kontak', 'type' => 'text'],
             ['key' => 'kontak_jam_kerja', 'value' => "Senin - Kamis (08:00 - 16:00 WIB)\nJumat (08:00 - 16:30 WIB)", 'group' => 'kontak', 'type' => 'text'],
             ['key' => 'kontak_maps_embed', 'value' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3959.043694082264!2d113.86477037466827!3d-7.01750059298379!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd9e46a78b53d0d%3A0x6b69a25b12852226!2sKantor%20Kementerian%20Agama%20Kabupaten%20Sumenep!5e0!3m2!1sid!2sid!4v1715349600000!5m2!1sid!2sid', 'group' => 'kontak', 'type' => 'text'],

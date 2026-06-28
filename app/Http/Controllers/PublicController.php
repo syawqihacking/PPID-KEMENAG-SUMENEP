@@ -158,6 +158,10 @@ class PublicController extends Controller
             'message' => 'required|string',
         ]);
 
+        if (auth()->check()) {
+            $validated['user_id'] = auth()->id();
+        }
+
         $infoRequest = InformationRequest::create($validated);
 
         return redirect()->route('requests.success', ['id' => $infoRequest->id]);
@@ -192,23 +196,28 @@ class PublicController extends Controller
     public function search(Request $request)
     {
         $q = $request->get('q', '');
-        $news = collect();
-        $documents = collect();
-
-        if (strlen($q) >= 2) {
-            $news = News::where('title', 'like', "%{$q}%")
-                        ->orWhere('content', 'like', "%{$q}%")
-                        ->orderBy('published_at', 'desc')
-                        ->take(10)
-                        ->get();
-
-            $documents = Document::where('title', 'like', "%{$q}%")
-                                ->orWhere('description', 'like', "%{$q}%")
-                                ->orderBy('created_at', 'desc')
-                                ->take(10)
-                                ->get();
+        
+        if (empty($q)) {
+            return redirect()->route('home');
         }
 
-        return view('pages.search', compact('q', 'news', 'documents'));
+        $news = News::where('title', 'like', "%$q%")
+            ->orWhere('content', 'like', "%$q%")
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $docs = Document::where('title', 'like', "%$q%")
+            ->orWhere('description', 'like', "%$q%")
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $faqs = Faq::where('question', 'like', "%$q%")
+            ->orWhere('answer', 'like', "%$q%")
+            ->take(5)
+            ->get();
+
+        return view('pages.search', compact('news', 'docs', 'faqs', 'q'));
     }
 }
