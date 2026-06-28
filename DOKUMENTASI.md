@@ -52,7 +52,7 @@ Website ini merupakan **Portal PPID (Pejabat Pengelola Informasi dan Dokumentasi
 ### Integrasi Eksternal
 | Layanan | Keterangan |
 |---|---|
-| **Google Gemini API** | AI Chatbot (model: `gemini-1.5-flash`) |
+| **Groq API** | AI Chatbot (model: `llama-3.1-8b-instant`) |
 | **WhatsApp API** | Tombol floating chat WhatsApp |
 
 ---
@@ -161,7 +161,8 @@ Jika user tidak memiliki role yang sesuai, akan muncul **HTTP 403 Forbidden**.
 
 ### B. Fitur Chatbot AI
 
-- Chatbot menggunakan **Google Gemini 1.5 Flash** sebagai backend AI
+- Chatbot menggunakan **Groq API** dengan model **Llama 3.1 8B Instant** sebagai backend AI
+- Format request menggunakan **OpenAI-compatible API** (`/openai/v1/chat/completions`)
 - Mendukung **Markdown rendering** pada respon bot
 - Fitur **escalation/handoff** ke CS manusia jika pengunjung mengetik "Hubungi CS"
 - **Knowledge Base** yang bisa dikelola admin untuk memperkaya konteks AI
@@ -464,13 +465,16 @@ sessions.user_id → users.id (nullable)
 
 ## 🔗 Integrasi Pihak Ketiga
 
-### 1. Google Gemini AI
+### 1. Groq AI (Llama 3.1)
 
-- **Model**: `gemini-1.5-flash`
-- **Endpoint**: `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`
+- **Provider**: Groq Cloud
+- **Model**: `llama-3.1-8b-instant` (bisa diganti via `GROQ_MODEL` di `.env`)
+- **Endpoint**: `https://api.groq.com/openai/v1/chat/completions`
+- **Auth**: Bearer token (`GROQ_API_KEY`)
 - **Fungsi**: Menjawab pertanyaan pengunjung seputar PPID
-- **Fitur**: Context-aware (membaca knowledge base + riwayat chat)
-- **Konfigurasi**: `GEMINI_API_KEY` di file `.env`
+- **Fitur**: Context-aware (membaca knowledge base + riwayat 10 pesan terakhir)
+- **Parameter**: `temperature: 0.3`, `max_tokens: 512`
+- **Konfigurasi**: `GROQ_API_KEY` dan `GROQ_MODEL` di file `.env`
 
 ### 2. WhatsApp
 
@@ -495,8 +499,9 @@ DB_PASSWORD=xxxxxx
 # Session
 SESSION_DRIVER=database
 
-# AI Chatbot
-GEMINI_API_KEY=your_gemini_api_key_here
+# AI Chatbot (Groq)
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.1-8b-instant
 ```
 
 ---
